@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:orientation="vertical"
+        android:weightSum="1"
+        android:background="@android:color/holo_blue_bright"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbarToDoItem"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    style="@style/ToDoTitleStyle"
+                    android:id="@+id/editTextTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/title"
+                    android:layout_marginTop="@dimen/view_top_margin"
+                    android:layout_marginStart="@dimen/view_start_margin"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+                <EditText
+                    style="@style/ToDoEditTextStyle"
+                    android:id="@+id/etDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/view_start_margin"
+                    android:layout_marginTop="@dimen/view_top_margin"
+                    android:ems="10"
+                    android:hint="@string/description"
+                    android:inputType="textMultiLine"
+                    android:maxLines="3"
+                    android:textSize="@dimen/view_text_medium"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/editTextTitle" />
+
+                <TextView
+                    style="@style/ToDoEditTextStyle"
+                    android:id="@+id/textDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/view_top_margin"
+                    android:layout_marginStart="@dimen/view_start_margin"
+                    android:text="@string/dd_mm_yy"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:textSize="@dimen/view_text_medium"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/etDescription" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cbReminder"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textDate"
+                    android:layout_marginStart="@dimen/view_start_margin"
+                    android:layout_marginTop="@dimen/view_top_margin"
+                    android:text="@string/reminder"
+                    android:textSize="@dimen/view_text_medium"
+                    />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cbRepeat"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cbReminder"
+                    android:layout_marginStart="@dimen/view_start_margin"
+                    android:layout_marginTop="@dimen/view_top_margin"
+                    android:text="@string/repeat"
+                    android:textSize="@dimen/view_text_medium"/>
+
+                <RadioGroup
+                    android:id="@+id/radioFreq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cbRepeat"
+                    android:layout_marginStart="@dimen/view_start_margin"
+                    android:layout_marginTop="@dimen/view_top_margin"
+                    android:visibility="gone">
+
+                    <RadioButton
+                        android:id="@+id/rbDaily"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cbRepeat"
+                        android:text="@string/daily"
+                        android:textSize="@dimen/view_text_medium"/>
+
+                    <RadioButton
+                        android:id="@+id/rbWeekly"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cbRepeat"
+                        android:text="@string/weekly"
+                        android:textSize="@dimen/view_text_medium"/>
+
+                    <RadioButton
+                        android:id="@+id/rbMonthly"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cbRepeat"
+                        android:text="@string/monthly"
+                        android:textSize="@dimen/view_text_medium"/>
+
+                </RadioGroup>
+
+
+                <TextView
+                    style="@style/ToDoEditTextStyle"
+                    android:id="@+id/textPriority"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/view_top_margin"
+                    android:layout_marginStart="@dimen/view_start_margin"
+                    android:text="@string/priority"
+                    android:textSize="30sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/radioFreq"/>
+
+                <TextView
+                    style="@style/ToDoEditTextStyle"
+                    android:id="@+id/textViewPrNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_0"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginStart="@dimen/view_start_margin"
+                    android:textSize="@dimen/view_text_large"
+                    app:layout_constraintLeft_toRightOf="@id/textPriority"
+                    app:layout_constraintTop_toTopOf="@id/textPriority"/>
+
+                <ImageButton
+                    android:id="@+id/imageButtonUp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@android:drawable/arrow_up_float"
+                    android:background="@android:color/holo_blue_bright"
+                    app:layout_constraintLeft_toRightOf="@id/textViewPrNum"
+                    app:layout_constraintTop_toTopOf="@+id/textViewPrNum"
+                    android:layout_marginStart="@dimen/view_start_margin"
+                    android:layout_marginTop="@dimen/view_top_margin"
+                    android:contentDescription="@string/up"/>
+
+                <ImageButton
+                    android:id="@+id/imageButtonDown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/holo_blue_bright"
+                    app:layout_constraintLeft_toLeftOf="@id/imageButtonUp"
+                    app:layout_constraintTop_toBottomOf="@+id/imageButtonUp"
+                    app:srcCompat="@android:drawable/arrow_down_float"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="@dimen/view_top_margin"
+                    android:contentDescription="@string/down"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

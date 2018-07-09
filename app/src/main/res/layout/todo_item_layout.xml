@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ToDoItemLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/view_padding"
+    android:background="@android:color/holo_green_light"
+    android:orientation="vertical">
+
+    <CheckBox
+        android:id="@+id/chbDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete" />
+
+    <ImageButton
+        android:id="@+id/imageButtonDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@android:color/holo_green_light"
+        app:srcCompat="@android:drawable/btn_dialog" />
+
+    <TextView
+        style="@style/ToDoTitleStyle"
+        android:id="@+id/Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/view_end_margin"
+        android:layout_marginStart="@dimen/view_start_margin"
+        android:layout_marginTop="@dimen/view_top_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/Description"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginEnd="@dimen/view_end_margin"
+        android:layout_marginStart="@dimen/view_start_margin"
+        android:layout_marginTop="@dimen/view_top_margin"
+        android:elegantTextHeight="false"
+        android:ellipsize="end"
+        android:fadingEdgeLength="@dimen/view_padding"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/view_text_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Title" />
+
+
+    <TextView
+        android:id="@+id/Date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/view_end_margin"
+        android:layout_marginStart="@dimen/view_start_margin"
+        android:layout_marginTop="@dimen/view_top_margin"
+        android:textSize="@dimen/view_text_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Description" />
+
+
+</LinearLayout>

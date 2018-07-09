@@ -1,0 +1,10 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="frame_elevation">10dp</dimen>
+    <dimen name="view_start_margin">10dp</dimen>
+    <dimen name="view_end_margin">8dp</dimen>
+    <dimen name="view_top_margin">10dp</dimen>
+    <dimen name="view_padding">5dp</dimen>
+    <dimen name="view_text_medium">20sp</dimen>
+    <dimen name="view_text_large">30sp</dimen>
+</resources>

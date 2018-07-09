@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">TODO_Application</string>
+    <string name="action_settings">Settings</string>
+    <string name="save">SAVE</string>
+    <string name="edit">EDIT</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="dd_mm_yy">DD/MM/YY</string>
+    <string name="reminder">Reminder</string>
+    <string name="repeat">Repeat</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="priority">Priority</string>
+    <string name="_0">0</string>
+    <string name="sort">SORT</string>
+    <string name="title_activity_to_do_tiem">ToDoTiemActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="down">Down</string>
+    <string name="up">Up</string>
+    <string name="delete">Delete</string>
+</resources>
