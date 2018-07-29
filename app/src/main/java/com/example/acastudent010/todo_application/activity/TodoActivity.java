@@ -1,27 +1,41 @@
-package com.example.acastudent010.todo_application;
+package com.example.acastudent010.todo_application.activity;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.arch.persistence.room.Room;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.acastudent010.todo_application.R;
+import com.example.acastudent010.todo_application.model.ToDoItem;
+import com.example.acastudent010.todo_application.fragment.ToDoItemFragment;
+import com.example.acastudent010.todo_application.fragment.ToDoListFragment;
+import com.example.acastudent010.todo_application.room.ToDoDataBase;
+import com.example.acastudent010.todo_application.util.DBAsyncHelper;
+
+import java.util.List;
 
 public class TodoActivity extends AppCompatActivity {
     ToDoListFragment toDoListFragment;
+    public ToDoDataBase db;
+
     ToDoItemFragment.OnDataSendListener itemEditListener = new ToDoItemFragment.OnDataSendListener() {
         @Override
         public void onItemCreated(ToDoItem item) {
+            ToDoItem[] toDoItems = {item};
+            DBAsyncHelper.insertData(db, toDoItems);
             toDoListFragment.addItem(item);
             getFragmentManager().popBackStack();
         }
 
         @Override
         public void onItemChanged(ToDoItem item) {
-            toDoListFragment.editview(item);
+            DBAsyncHelper.updateData(db,item);
+            toDoListFragment.editView(item);
             getFragmentManager().popBackStack();
         }
 
@@ -42,12 +56,17 @@ public class TodoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toDoListFragment = (ToDoListFragment) (getFragmentManager().findFragmentById(R.id.list_fragment));
+        db = ToDoDataBase.getTodoDataBase(getApplicationContext());
+        toDoListFragment =  (ToDoListFragment)(getFragmentManager().findFragmentById(R.id.list_fragment));
+        List<ToDoItem> toDoItems = DBAsyncHelper.retrieveData(db);
+        toDoListFragment.getToDoAdapter().setmData(toDoItems);
         toDoListFragment.setmListener(listInteractionListener);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,5 +105,11 @@ public class TodoActivity extends AppCompatActivity {
             fragmentTransaction.addToBackStack(fragment.getClass().toString());
         }
         fragmentTransaction.commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ToDoDataBase.destroyInstance();
     }
 }

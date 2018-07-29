@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.acastudent010.todo_application.TodoActivity"
+    tools:context="com.example.acastudent010.todo_application.activity.TodoActivity"
     tools:showIn="@layout/fragment_to_do_list">
 
    <android.support.v7.widget.RecyclerView

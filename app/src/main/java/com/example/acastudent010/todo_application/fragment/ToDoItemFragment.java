@@ -1,10 +1,9 @@
-package com.example.acastudent010.todo_application;
+package com.example.acastudent010.todo_application.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,12 +22,18 @@ import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
+import com.example.acastudent010.todo_application.IObserver;
+import com.example.acastudent010.todo_application.R;
+import com.example.acastudent010.todo_application.SomeEvent;
+import com.example.acastudent010.todo_application.model.ToDoItem;
+import com.example.acastudent010.todo_application.activity.TodoActivity;
+import com.example.acastudent010.todo_application.util.DateUtil;
+import com.example.acastudent010.todo_application.util.KeyboardUtil;
+
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.UUID;
-
-import static android.text.TextUtils.isEmpty;
+import java.util.List;
 
 
 /**
@@ -45,11 +50,9 @@ public class ToDoItemFragment extends android.app.Fragment {
     public static final int MODE_CREATION = 0;
     public static final int MODE_CHANGE = 1;
 
-    String textTitle;
-    String textDescription;
     int prior = ToDoItem.MIN_PRIORITY;
-    long dateValueInMillis;
     private int mMode;
+    private boolean isEditMode = true;
 
     TextView date, priority, prNum;
     EditText title, description;
@@ -58,6 +61,9 @@ public class ToDoItemFragment extends android.app.Fragment {
     ImageButton increase, decrease;
     private ToDoItem mToDoItem;
     private OnDataSendListener mListener;
+
+    private SomeEvent someEvent;
+    private List<IObserver> iObservers = new ArrayList<>();
 
     public void setmListener(OnDataSendListener mListener) {
         this.mListener = mListener;
@@ -101,7 +107,7 @@ public class ToDoItemFragment extends android.app.Fragment {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
         View fragmentView = inflater.inflate(R.layout.fragment_to_do_item, container, false);
-        Toolbar toolbar = (Toolbar) fragmentView.findViewById(R.id.toolbarToDoItem);
+        Toolbar toolbar = fragmentView.findViewById(R.id.toolbarToDoItem);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         fragmentView.setTag("ToDoItem");
 
@@ -121,17 +127,17 @@ public class ToDoItemFragment extends android.app.Fragment {
     }
 
     private void init(View view) {
-        title = (EditText) view.findViewById(R.id.editTextTitle);
-        description = (EditText) view.findViewById(R.id.etDescription);
-        date = (TextView) view.findViewById(R.id.textDate);
-        reminder = (CheckBox) view.findViewById(R.id.cbReminder);
-        repeat = (CheckBox) view.findViewById(R.id.cbRepeat);
-        radioFrequency = (RadioGroup) view.findViewById(R.id.radioFreq);
+        title = view.findViewById(R.id.editTextTitle);
+        description = view.findViewById(R.id.etDescription);
+        date = view.findViewById(R.id.textDate);
+        reminder = view.findViewById(R.id.cbReminder);
+        repeat = view.findViewById(R.id.cbRepeat);
+        radioFrequency = view.findViewById(R.id.radioFreq);
         radioFrequency.setVisibility(View.GONE);
-        priority = (TextView) view.findViewById(R.id.textPriority);
-        prNum = (TextView) view.findViewById(R.id.textViewPrNum);
-        increase = (ImageButton) view.findViewById(R.id.imageButtonUp);
-        decrease = (ImageButton) view.findViewById(R.id.imageButtonDown);
+        priority = view.findViewById(R.id.textPriority);
+        prNum = view.findViewById(R.id.textViewPrNum);
+        increase = view.findViewById(R.id.imageButtonUp);
+        decrease = view.findViewById(R.id.imageButtonDown);
 
         date.setOnClickListener(onViewClickListener);
         increase.setOnClickListener(onViewClickListener);
@@ -156,6 +162,7 @@ public class ToDoItemFragment extends android.app.Fragment {
                 switch (mMode) {
                     case MODE_CREATION:
                         mListener.onItemCreated(createToDoItem());
+
                         break;
                     case MODE_CHANGE:
                         mListener.onItemChanged(createToDoItem());
@@ -167,7 +174,15 @@ public class ToDoItemFragment extends android.app.Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //    menu.clear();
         inflater.inflate(R.menu.menu_todo_item, menu);
+
+        if (isEditMode) {
+            menu.findItem(R.id.edit_save_ToDo).setIcon(android.R.drawable.ic_menu_edit);
+        } else {
+            menu.findItem(R.id.edit_save_ToDo).setIcon(R.drawable.check);
+        }
+        disableViews();
     }
 
     @Override
@@ -179,18 +194,17 @@ public class ToDoItemFragment extends android.app.Fragment {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.editToDo) {
-            onEditClick();
-            submit();
-            item.setIcon(R.drawable.check);
+        if (id == R.id.edit_save_ToDo) {
+            if (isEditMode) {
+                isEditMode = false;
+                onEditClick();
+                item.setIcon(R.drawable.check);
+            } else {
+                submit();
+            }
             return true;
         }
 
-        if (id == R.drawable.check) {
-            onSaveClick();
-            item.setIcon(android.R.drawable.ic_menu_edit);
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -247,7 +261,7 @@ public class ToDoItemFragment extends android.app.Fragment {
     private void fillItem(ToDoItem item) {
         title.setText(item.getTitle());
         description.setText(item.getDescription());
-        myCalendar.setTime(item.getmDate());
+        myCalendar.setTime(item.getDate());
         date.setText(DateUtil.formatDateToLongStile(myCalendar.getTime()));
         reminder.setChecked(item.isCheckRemind());
         if (item.getRepeatType() != null) {
@@ -276,11 +290,10 @@ public class ToDoItemFragment extends android.app.Fragment {
         if (mToDoItem == null) {
             // If item is newly created initialize with uuid
             mToDoItem = new ToDoItem();
-            mToDoItem.setId(UUID.randomUUID().toString());
         }
         mToDoItem.setTitle(title.getText().toString());
         mToDoItem.setDescription(description.getText().toString());
-        mToDoItem.setmDate(myCalendar.getTime());
+        mToDoItem.setDate(myCalendar.getTime());
         mToDoItem.setCheckRemind(reminder.isChecked());
         mToDoItem.setPriority(prior);
         if (repeat.isChecked()) {
@@ -295,12 +308,12 @@ public class ToDoItemFragment extends android.app.Fragment {
                     mToDoItem.setRepeatType(ToDoItem.Repeat.MONTHLY);
                     break;
                 default:
-                    mToDoItem.setRepeatType(ToDoItem.Repeat.NONE);
+                    break;
             }
+        } else {
+            mToDoItem.setRepeatType(ToDoItem.Repeat.NONE);
         }
-
         return mToDoItem;
-
     }
 
    /* private void increasePriority() {
@@ -314,10 +327,10 @@ public class ToDoItemFragment extends android.app.Fragment {
     }*/
 
     private boolean checkInput() {
-        boolean isValid;
-        isValid = checkTitle();
+        boolean isTitleValid = checkTitle();
+        boolean isDescriptionValid = checkDescription();
 
-        return isValid;
+        return (isTitleValid && isDescriptionValid);
     }
 
     private boolean checkTitle() {
@@ -331,6 +344,19 @@ public class ToDoItemFragment extends android.app.Fragment {
         }
         return isValid;
     }
+
+    private boolean checkDescription() {
+        boolean isValid;
+        if (isEmpty(description)) {
+            isValid = false;
+            description.setError("Description field is mandatory");
+        } else {
+            isValid = true;
+            description.setError(null);
+        }
+        return isValid;
+    }
+
 
     private boolean isEmpty(EditText editText) {
         return TextUtils.isEmpty(editText.getText().toString());
@@ -346,21 +372,7 @@ public class ToDoItemFragment extends android.app.Fragment {
         decrease.setEnabled(true);
     }
 
-    private void onSaveClick() {
-        textTitle = title.getText().toString();
-        textDescription = description.getText().toString();
-        prior = Integer.parseInt(prNum.getText().toString());
-        dateValueInMillis = myCalendar.getTimeInMillis();
-
-
-        /*if (!isEmpty(textTitle) || !isEmpty(textDescription) || !isEmpty(date.getText())) {
-            if (mListener != null) {
-                mListener.onDataSend(createToDoItem());
-            }
-        } else {
-            Toast.makeText(getActivity(), "Title or description or date is not filled!", Toast.LENGTH_LONG).show();
-            return;
-        }*/
+    private void disableViews() {
         title.setEnabled(false);
         date.setEnabled(false);
         description.setEnabled(false);
@@ -368,7 +380,6 @@ public class ToDoItemFragment extends android.app.Fragment {
         repeat.setEnabled(false);
         increase.setEnabled(false);
         decrease.setEnabled(false);
-
     }
 
     private void openDatePicker() {
@@ -385,6 +396,12 @@ public class ToDoItemFragment extends android.app.Fragment {
     private void setDateText() {
         date.setText(DateUtil.formatDateToLongStile(myCalendar.getTime()));
     }
+
+
+    public void setState(SomeEvent event) {
+
+    }
+
 
     @Override
     public void onDetach() {
@@ -404,6 +421,7 @@ public class ToDoItemFragment extends android.app.Fragment {
      */
     public interface OnDataSendListener {
         void onItemCreated(ToDoItem item);
+
         void onItemChanged(ToDoItem item);
     }
 }

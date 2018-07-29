@@ -8,10 +8,17 @@
     android:background="@android:color/holo_green_light"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
     <CheckBox
         android:id="@+id/chbDelete"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity=""
+        android:layout_weight="1"
         android:text="@string/delete" />
 
     <ImageButton
@@ -20,7 +27,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:background="@android:color/holo_green_light"
-        app:srcCompat="@android:drawable/btn_dialog" />
+        app:srcCompat="@android:drawable/ic_delete"
+        android:layout_marginEnd="@dimen/view_end_margin"/>
+    </LinearLayout>
+
 
     <TextView
         style="@style/ToDoTitleStyle"
@@ -41,7 +51,6 @@
         android:layout_marginEnd="@dimen/view_end_margin"
         android:layout_marginStart="@dimen/view_start_margin"
         android:layout_marginTop="@dimen/view_top_margin"
-        android:elegantTextHeight="false"
         android:ellipsize="end"
         android:fadingEdgeLength="@dimen/view_padding"
         android:textColor="@color/colorPrimaryDark"

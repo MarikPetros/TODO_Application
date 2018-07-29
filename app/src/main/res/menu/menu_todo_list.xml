@@ -1,11 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.acastudent010.todo_application.TodoActivity">
+    tools:context="com.example.acastudent010.todo_application.activity.TodoActivity">
 
     <item
         android:id="@+id/sort"
         android:title="@string/sort"
         app:showAsAction="ifRoom">
+    </item>
+    <item
+        android:id="@+id/forDelete"
+        android:title="@string/delete"
+        app:showAsAction="ifRoom|withText">
     </item>
 </menu>

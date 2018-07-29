@@ -21,4 +21,5 @@
     <string name="down">Down</string>
     <string name="up">Up</string>
     <string name="delete">Delete</string>
+    <string name="delete_message"> items selected to delete.</string>
 </resources>
